@@ -1,10 +1,12 @@
 import React from 'react'
 import { useFormik } from 'formik';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styles from '../pages/Styles/login.module.css'
 import toast, { Toaster } from 'react-hot-toast';
 import { registerValidation } from '../helper/userValid';
+import { register } from '../helper/api';
 export const Register = () => {
+    const navigate = useNavigate()
     const formik = useFormik({
         initialValues: {
             firstname: '',
@@ -20,7 +22,14 @@ export const Register = () => {
         validateOnBlur: false,
         validateOnChange: false,
         onSubmit: async values => {
-            console.log(values);
+            let registerPromise = register(values)
+
+             toast.promise(registerPromise, {
+                loading: 'Creating...',
+                success: <b>Register Successfully...!</b>,
+                error: <b>Could not Register.</b>
+            });
+            // registerPromise.then(function () { navigate('/') });
         }
     })
 
